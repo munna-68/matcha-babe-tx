@@ -6,15 +6,15 @@ import { KIND_LABEL, type Enquiry, type EnquiryStatus } from "@/data/mock";
 import { fmtDate } from "@/lib/dates";
 
 export const STATUS_META: Record<EnquiryStatus, { label: string; cls: string; next?: { to: EnquiryStatus; label: string } }> = {
-  new: { label: "New", cls: "bg-pink text-paper", next: { to: "quoted", label: "Send quote" } },
+  new: { label: "New", cls: "bg-leaf text-milk", next: { to: "quoted", label: "Send quote" } },
   quoted: { label: "Quoted", cls: "bg-lav text-forest", next: { to: "confirmed", label: "Confirm" } },
   confirmed: { label: "Confirmed", cls: "bg-matcha-soft text-forest", next: { to: "ready", label: "Mark ready" } },
-  ready: { label: "Ready", cls: "bg-forest text-cream" },
+  ready: { label: "Ready", cls: "bg-forest text-milk" },
 };
 
 export function StatusPill({ s }: { s: EnquiryStatus }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] ${STATUS_META[s].cls}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold ${STATUS_META[s].cls}`}>
       <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
       {STATUS_META[s].label}
     </span>
@@ -26,7 +26,7 @@ export function Card({ children, className = "", title, action, ...rest }: { chi
     <div data-dash className={`min-w-0 rounded-[24px] p-5 md:p-6 ${/\bbg-/.test(className) ? "" : "bg-paper ring-1 ring-forest/8"} ${className}`} {...rest}>
       {(title || action) && (
         <div className="mb-4 flex items-center justify-between gap-3">
-          {title && <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-forest/60">{title}</h2>}
+          {title && <h2 className="text-[11px] font-semibold text-forest/60">{title}</h2>}
           {action}
         </div>
       )}
@@ -36,7 +36,7 @@ export function Card({ children, className = "", title, action, ...rest }: { chi
 }
 
 export function DemoChip() {
-  return <span className="rounded-full border border-current/25 px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.16em] opacity-60">demo data</span>;
+  return <span className="rounded-full border border-current/25 px-2.5 py-1 text-[9.5px] font-semibold opacity-60">demo data</span>;
 }
 
 /** Animated number that tweens when the value changes. */
@@ -115,7 +115,7 @@ export function Toasts({ toasts }: { toasts: ReturnType<typeof useToasts>["toast
         <div
           key={t.id}
           role="status"
-          className={`pointer-events-auto w-full max-w-sm animate-[toast-in_.6s_var(--ease-babe)] rounded-2xl px-5 py-4 shadow-[0_24px_60px_-24px_rgba(5,63,28,.7)] ${t.tone === "pink" ? "bg-pink text-paper" : "bg-forest text-cream"}`}
+          className={`pointer-events-auto w-full max-w-sm animate-[toast-in_.6s_var(--ease-babe)] rounded-2xl px-5 py-4 shadow-[0_24px_60px_-24px_rgba(31,58,31,.7)] ${t.tone === "pink" ? "bg-leaf text-milk" : "bg-forest text-milk"}`}
         >
           <p className="font-medium">{t.title}</p>
           {t.body && <p className="mt-0.5 text-[13.5px] opacity-80">{t.body}</p>}

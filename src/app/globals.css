@@ -1,44 +1,58 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
-   Matcha Babe — design tokens (sampled from the Instagram grid, see
-   research/palette.md; lifted slightly for screen legibility)
+   Matcha Babe — "sunlit counter"
+   A warm sage-cream ground, deep leaf-green ink, one mid-green field
+   colour for arches and bands, latte green, and her pink only in tiny
+   doses (hearts, straws, the cart dot). Old token names are kept and
+   mapped so every component shifts with the new palette.
 ------------------------------------------------------------------- */
 @theme {
-  --color-forest: #053f1c;      /* logo circle  (sampled #013E17) */
-  --color-forest-deep: #022b12;
-  --color-kelly: #0a7037;       /* checkerboard (sampled #077034) */
-  --color-matcha: #8aab4b;      /* iced latte body (#85A546) */
-  --color-matcha-soft: #c8d99c; /* lucky charms latte (#A9C47F) lifted */
-  --color-matcha-mist: #e4ebcf;
-  --color-cream: #f3ede0;       /* page */
-  --color-paper: #fbf8f1;       /* cards */
-  --color-oat: #e3d9c8;         /* tote / banner cloth (#D4C9BF) */
-  --color-pink: #d9436b;        /* brick wall (#CE4266) */
-  --color-blush: #f5c6d2;
-  --color-blush-soft: #fbe4ea;
-  --color-lav: #cbb6ea;         /* lavender haze (#CBB6EA) */
-  --color-blue: #0c509e;        /* blue coconut (#0C509E) */
-  --color-ink: #053f1c;
+  --color-cream: #eee6cf;       /* page ground: sun on a plaster wall */
+  --color-milk: #f7f2e3;        /* lighter surfaces, cards */
+  --color-sand: #e3d8ba;        /* deeper ground for alternating bands */
+  --color-forest: #1f3a1f;      /* ink — never black */
+  --color-forest-deep: #152a16;
+  --color-leaf: #3d6a33;        /* field green: arches, bands */
+  --color-matcha: #8db045;      /* iced latte */
+  --color-matcha-soft: #cadb9e;
+  --color-matcha-mist: #e2e6c4;
+  --color-pink: #e0507a;        /* her straws + heart stickers */
+  --color-blush: #f4c9d5;
+  --color-blush-soft: #f8e2e6;
+  --color-lav: #cdb9ea;
+  --color-blue: #2c5da8;
 
-  --font-display: var(--font-bagel), "Arial Rounded MT Bold", system-ui, sans-serif;
-  --font-serif: var(--font-instrument), "Times New Roman", serif;
-  --font-script: var(--font-caveat), "Bradley Hand", cursive;
-  --font-mono: var(--font-dm-mono), ui-monospace, monospace;
-  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  /* legacy names → new values */
+  --color-paper: #f7f2e3;
+  --color-kelly: #3d6a33;
+  --color-oat: #e3d8ba;
+  --color-ink: #1f3a1f;
+
+  --font-display: var(--font-puff), "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+  /* the old serif / script / mono voices are retired: they now resolve to
+     the two house faces so nothing renders in a stray font */
+  --font-serif: var(--font-puff), system-ui, sans-serif;
+  --font-script: var(--font-puff), system-ui, sans-serif;
+  --font-mono: var(--font-figtree), system-ui, sans-serif;
 
   --ease-babe: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-babe-io: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 :root {
-  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.02  0 0 0 0 0.2  0 0 0 0 0.08  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.2  0 0 0 0 0.1  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --gutter: 1.25rem;
   color-scheme: light;
+}
+@media (min-width: 768px) {
+  :root { --gutter: 2.5rem; }
 }
 
 html {
   background: var(--color-cream);
-  color: var(--color-ink);
+  color: var(--color-forest);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -51,10 +65,12 @@ html.lenis, html.lenis body { height: auto; }
 body {
   background: var(--color-cream);
   font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
   overflow-x: clip;
 }
 
-/* paper grain over everything, very subtle, never intercepts input */
+/* plaster grain, very subtle, fixed so it never repaints on scroll */
 body::after {
   content: "";
   position: fixed;
@@ -62,40 +78,83 @@ body::after {
   pointer-events: none;
   z-index: 90;
   background-image: var(--grain);
-  opacity: 0.09;
+  opacity: 0.07;
   mix-blend-mode: multiply;
 }
 
-::selection { background: var(--color-blush); color: var(--color-forest); }
+::selection { background: var(--color-matcha-soft); color: var(--color-forest); }
 
-/* hide the native cursor only when our custom cursor is live */
-html.has-cursor, html.has-cursor * { cursor: none !important; }
+/* ---------- type ---------- */
 
-/* ---------- type helpers ---------- */
-.label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+/* the wordmark cut: DynaPuff at full width and weight */
+.puff {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 100;
+  line-height: 0.84;
+  letter-spacing: -0.012em;
+}
+/* headings: a touch narrower and lighter so long lines stay calm */
+.display,
+.serif {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-variation-settings: "wdth" 92;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  font-style: normal;
+}
+.serif em, .serif .italic, .display em, .display .italic { font-style: normal; }
+/* retired script voice: renders as a soft display line */
+.script {
+  font-family: var(--font-display);
   font-weight: 500;
+  font-variation-settings: "wdth" 88;
 }
-.display { font-family: var(--font-display); line-height: 0.92; letter-spacing: -0.01em; }
-.serif { font-family: var(--font-serif); }
-.script { font-family: var(--font-script); }
 
-/* pink pill highlight behind key words (draws in left → right) */
-.pill {
-  position: relative;
-  display: inline-block;
-  white-space: nowrap;
-  isolation: isolate;
+/* the reference's tracked line: used once per section at most */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
 }
+.eyebrow::after {
+  content: "";
+  width: 3.5rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+@media (max-width: 767px) {
+  .eyebrow { letter-spacing: 0.2em; gap: 0.7rem; font-size: 0.68rem; }
+  .eyebrow::after { width: 2rem; }
+}
+
+/* small UI label: sentence case, never tracked caps */
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.font-mono { font-variant-numeric: tabular-nums; }
+
+/* SplitText masks: breathing room so descenders and puffy bowls aren't cut */
+.split-mask, .split-line { padding-bottom: 0.08em; margin-bottom: -0.08em; }
+
+/* highlight pill (kept for the order flow) */
+.pill { position: relative; display: inline-block; white-space: nowrap; isolation: isolate; }
 .pill::before {
   content: "";
   position: absolute;
-  inset: 0.08em -0.22em 0.02em;
+  inset: 0.1em -0.2em 0.02em;
   border-radius: 999px;
-  background: var(--pill-bg, var(--color-blush));
+  background: var(--pill-bg, var(--color-matcha-soft));
   z-index: -1;
   transform-origin: left center;
   transform: scaleX(var(--pill-s, 1));
@@ -103,12 +162,65 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
 }
 .js .pill[data-pill]:not(.is-in) { --pill-s: 0; }
 
-/* SplitText line masks: a little breathing room so descenders aren't cut */
-.split-mask { padding-bottom: 0.06em; margin-bottom: -0.06em; }
+/* ---------- buttons (reference: solid forest pill, outline pill) ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 999px;
+  padding: 1.05rem 1.9rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.5s var(--ease-babe), box-shadow 0.5s var(--ease-babe), transform 0.2s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-solid { background: var(--color-forest); color: var(--color-milk); }
+.btn-milk { background: var(--color-milk); color: var(--color-forest); }
+.btn-ghost { box-shadow: inset 0 0 0 1.5px color-mix(in oklab, currentColor 40%, transparent); color: var(--color-forest); }
+.btn-ghost-light { box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--color-milk) 45%, transparent); color: var(--color-milk); }
+/* hover: a disc rises from below and the label rolls */
+.btn::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 140%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% 0;
+  background: var(--btn-fill, var(--color-leaf));
+  z-index: -1;
+  transition: translate 0.7s var(--ease-babe);
+}
+.btn-milk { --btn-fill: var(--color-matcha-soft); }
+.btn-ghost { --btn-fill: var(--color-forest); }
+.btn-ghost-light { --btn-fill: var(--color-milk); }
+@media (hover: hover) {
+  .btn:hover::before { translate: -50% -60%; }
+  .btn-ghost:hover { color: var(--color-milk); }
+  .btn-ghost-light:hover { color: var(--color-forest); }
+}
+.roll { position: relative; display: block; overflow: hidden; line-height: 1.15; }
+.roll > span { display: block; transition: translate 0.55s var(--ease-babe); }
+.roll > span + span { position: absolute; inset: 0; translate: 0 105%; }
+@media (hover: hover) {
+  .group:hover .roll > span:first-child, .btn:hover .roll > span:first-child { translate: 0 -105%; }
+  .group:hover .roll > span + span, .btn:hover .roll > span + span { translate: 0 0; }
+}
+.btn .arrow { transition: translate 0.55s var(--ease-babe); }
+@media (hover: hover) { .btn:hover .arrow { translate: 4px 0; } }
 
 /* ---------- pre-hydration safety ----------
-   Hero elements start hidden only when JS is present, and a fallback
-   animation reveals them if hydration never happens. */
+   Animated elements start hidden only when JS is present, and a fallback
+   reveals them if hydration never happens. */
 .js:not(.motion-ready) [data-hero],
 .js:not(.motion-ready) [data-fade],
 .js:not(.motion-ready) [data-pop] {
@@ -122,23 +234,34 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
 .preloader { animation: mb-fallback-hide 0.6s ease 7s forwards; }
 .preloader[data-live] { animation: none; }
 @keyframes mb-fallback-hide { to { opacity: 0; visibility: hidden; } }
+/* while the intro plays, the hero word is drawn by the preloader */
+.js:not(.mb-seen) [data-hero-word] { opacity: 0; }
 
-/* decorative checkerboard band */
-.checker {
-  --c1: var(--color-kelly);
-  --c2: var(--color-paper);
-  --s: 28px;
-  background:
-    conic-gradient(var(--c1) 25%, var(--c2) 0 50%, var(--c1) 0 75%, var(--c2) 0) 0 0 / calc(var(--s) * 2) calc(var(--s) * 2);
+/* sunlight through leaves: soft blurred leaf shadows drifting on the wall */
+.leaf-shadow { position: absolute; pointer-events: none; color: var(--color-forest); opacity: 0.11; filter: blur(9px); mix-blend-mode: multiply; }
+@media (prefers-reduced-motion: no-preference) {
+  .leaf-sway { animation: leaf-sway 9s ease-in-out infinite alternate; transform-origin: 0% 0%; }
 }
+@keyframes leaf-sway { from { rotate: -2.5deg; } to { rotate: 2.5deg; } }
 
-/* green tile grid (from the tiled table in the photos) */
+/* photo marquee */
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { animation: marquee var(--marquee-d, 50s) linear infinite; }
+@media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
+
+/* green tile grid (her tiled tabletop) and checker, used sparingly */
 .tiles {
-  background-color: var(--color-kelly);
+  background-color: var(--color-leaf);
   background-image:
-    linear-gradient(rgba(255,255,255,.28) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255,255,255,.28) 2px, transparent 2px);
-  background-size: 54px 54px;
+    linear-gradient(rgba(255,255,255,.22) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255,255,255,.22) 2px, transparent 2px);
+  background-size: 56px 56px;
+}
+.checker {
+  --c1: var(--color-leaf);
+  --c2: var(--color-milk);
+  --s: 28px;
+  background: conic-gradient(var(--c1) 25%, var(--c2) 0 50%, var(--c1) 0 75%, var(--c2) 0) 0 0 / calc(var(--s) * 2) calc(var(--s) * 2);
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -147,10 +270,11 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .pill::before { transition: none; }
   .js .pill[data-pill]:not(.is-in) { --pill-s: 1; }
+  .btn::before, .roll > span { transition: none; }
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-pink);
+  outline: 2px solid var(--color-leaf);
   outline-offset: 3px;
   border-radius: 6px;
 }

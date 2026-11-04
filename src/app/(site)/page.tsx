@@ -1,17 +1,18 @@
 import { Hero } from "@/components/home/Hero";
-import { Statement, SeasonFeature, FallMenuScroller, Categories, HowItWorks, FindUs, ClosingCTA } from "@/components/home/Sections";
+import { Statement, Signatures, FallMenuScroller, HowItWorks, Loyalty, FindUs, Events, PhotoStrip } from "@/components/home/Sections";
 
 export default function Home() {
   return (
     <>
       <Hero />
       <Statement />
-      <SeasonFeature />
+      <Signatures />
       <FallMenuScroller />
-      <Categories />
       <HowItWorks />
+      <Loyalty />
       <FindUs />
-      <ClosingCTA />
+      <Events />
+      <PhotoStrip />
     </>
   );
 }

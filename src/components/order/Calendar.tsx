@@ -24,13 +24,13 @@ export function Calendar({ value, onChange, earliest, latest }: Props) {
   return (
     <div className="rounded-[26px] bg-paper p-4 ring-1 ring-forest/10 sm:p-6">
       <div className="flex items-center justify-between">
-        <button type="button" onClick={() => shift(-1)} disabled={!canPrev} className="grid h-11 w-11 place-items-center rounded-full ring-1 ring-forest/15 transition-colors hover:bg-forest hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest" aria-label="Previous month">←</button>
+        <button type="button" onClick={() => shift(-1)} disabled={!canPrev} className="grid h-11 w-11 place-items-center rounded-full ring-1 ring-forest/15 transition-colors hover:bg-forest hover:text-milk disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest" aria-label="Previous month">←</button>
         <p className="display text-2xl text-forest">{monthLabel(ym.y, ym.m)}</p>
-        <button type="button" onClick={() => shift(1)} disabled={!canNext} className="grid h-11 w-11 place-items-center rounded-full ring-1 ring-forest/15 transition-colors hover:bg-forest hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest" aria-label="Next month">→</button>
+        <button type="button" onClick={() => shift(1)} disabled={!canNext} className="grid h-11 w-11 place-items-center rounded-full ring-1 ring-forest/15 transition-colors hover:bg-forest hover:text-milk disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest" aria-label="Next month">→</button>
       </div>
       <div className="mt-5 grid grid-cols-7 gap-1 text-center">
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-          <span key={i} className="pb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-forest/45">{d}</span>
+          <span key={i} className="pb-2 text-[10px] font-semibold text-forest/45">{d}</span>
         ))}
         {cells.map((iso, i) => {
           if (!iso) return <span key={i} />;
@@ -49,13 +49,13 @@ export function Calendar({ value, onChange, earliest, latest }: Props) {
               aria-label={`${iso}${disabled ? " unavailable" : ""}${cutoff ? ", last day for holiday orders" : ""}`}
               className={`relative aspect-square rounded-full text-[15px] transition-all duration-300 ${
                 selected
-                  ? "scale-105 bg-pink font-medium text-paper shadow-[0_10px_24px_-10px_rgba(217,67,107,.8)]"
+                  ? "scale-105 bg-leaf font-medium text-paper shadow-[0_10px_24px_-10px_rgba(217,67,107,.8)]"
                   : disabled
                     ? onBreak
                       ? "text-forest/25 line-through decoration-pink/50"
                       : "text-forest/25"
                     : "text-forest hover:bg-matcha-mist"
-              } ${cutoff && !selected ? "ring-2 ring-pink/60" : ""}`}
+              } ${cutoff && !selected ? "ring-2 ring-leaf/60" : ""}`}
             >
               {parseIso(iso).d}
               {drop && <span className={`absolute bottom-[14%] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full ${selected ? "bg-paper" : "bg-kelly"}`} />}
@@ -65,7 +65,7 @@ export function Calendar({ value, onChange, earliest, latest }: Props) {
       </div>
       <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-forest/10 pt-4 text-[12.5px] text-forest/65">
         <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-kelly" /> Pop-up day</span>
-        <span className="flex items-center gap-2"><span className="h-3.5 w-3.5 rounded-full ring-2 ring-pink/60" /> Holiday cutoff</span>
+        <span className="flex items-center gap-2"><span className="h-3.5 w-3.5 rounded-full ring-2 ring-leaf/60" /> Holiday cutoff</span>
         <span className="flex items-center gap-2"><span className="text-forest/30 line-through decoration-pink/50">20</span> Holiday break</span>
         <span>Closed Mondays</span>
       </div>

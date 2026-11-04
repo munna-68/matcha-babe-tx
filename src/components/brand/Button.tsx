@@ -2,53 +2,54 @@
 
 import type { ReactNode, ButtonHTMLAttributes } from "react";
 import { TransitionLink } from "@/components/motion/PageTransition";
+import { Icon } from "./Brand";
 
-type Variant = "pink" | "forest" | "ghost" | "cream";
+/** Old variant names still work: pink/forest → solid, cream → milk. */
+type Variant = "solid" | "milk" | "ghost" | "ghost-light" | "pink" | "forest" | "cream";
 
-const STYLES: Record<Variant, string> = {
-  pink: "bg-pink text-paper",
-  forest: "bg-forest text-cream",
-  ghost: "border border-forest/30 text-forest",
-  cream: "bg-cream text-forest",
+const CLASS: Record<Variant, string> = {
+  solid: "btn-solid",
+  pink: "btn-solid",
+  forest: "btn-solid",
+  milk: "btn-milk",
+  cream: "btn-milk",
+  ghost: "btn-ghost",
+  "ghost-light": "btn-ghost-light",
 };
 
+/** Label that rolls up on hover, plus an optional arrow. */
 function Inner({ children, arrow }: { children: ReactNode; arrow?: boolean }) {
   return (
     <>
-      {/* fill that floods up from the bottom on hover */}
-      <span className="absolute inset-0 translate-y-[101%] rounded-full bg-forest-deep transition-transform duration-700 ease-[var(--ease-babe)] group-hover:translate-y-0" />
-      <span className="relative flex items-center gap-3 transition-colors duration-500 group-hover:text-cream">
-        {children}
-        {arrow && (
-          <span className="relative h-4 w-4 overflow-hidden">
-            <span className="absolute inset-0 transition-transform duration-500 ease-[var(--ease-babe)] group-hover:translate-x-full">→</span>
-            <span className="absolute inset-0 -translate-x-full transition-transform duration-500 ease-[var(--ease-babe)] group-hover:translate-x-0">→</span>
-          </span>
-        )}
-      </span>
+      {typeof children === "string" ? (
+        <span className="roll">
+          <span>{children}</span>
+          <span aria-hidden>{children}</span>
+        </span>
+      ) : (
+        children
+      )}
+      {arrow && <Icon name="arrow" className="arrow h-[1.1em] w-[1.1em]" />}
     </>
   );
 }
 
-const base =
-  "group relative inline-flex items-center justify-center overflow-hidden rounded-full px-7 py-4 font-mono text-[12px] font-medium uppercase tracking-[0.18em] will-change-transform select-none";
-
-/** Magnetic pill link (route transition aware). */
+/** Pill link (route-transition aware). `cursor` is accepted for old call sites and ignored. */
 export function ButtonLink({
-  href, children, variant = "pink", arrow = true, className = "", label, cursor,
+  href, children, variant = "solid", arrow = true, className = "", label,
 }: { href: string; children: ReactNode; variant?: Variant; arrow?: boolean; className?: string; label?: string; cursor?: string }) {
   return (
-    <TransitionLink href={href} label={label} data-magnetic="0.3" data-cursor={cursor} className={`${base} ${STYLES[variant]} ${className}`}>
+    <TransitionLink href={href} label={label} className={`btn ${CLASS[variant]} ${className}`}>
       <Inner arrow={arrow}>{children}</Inner>
     </TransitionLink>
   );
 }
 
 export function Button({
-  children, variant = "pink", arrow = false, className = "", ...rest
+  children, variant = "solid", arrow = false, className = "", ...rest
 }: { children: ReactNode; variant?: Variant; arrow?: boolean } & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button data-magnetic="0.25" className={`${base} ${STYLES[variant]} disabled:pointer-events-none disabled:opacity-40 ${className}`} {...rest}>
+    <button className={`btn ${CLASS[variant]} disabled:pointer-events-none disabled:opacity-40 ${className}`} {...rest}>
       <Inner arrow={arrow}>{children}</Inner>
     </button>
   );

@@ -116,12 +116,12 @@ export function Dashboard() {
   return (
     <div ref={root} className="min-h-dvh bg-cream text-forest lg:pl-[264px]">
       {/* ── sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[264px] flex-col bg-forest p-5 text-cream lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[264px] flex-col bg-forest p-5 text-milk lg:flex">
         <div data-side className="flex items-center gap-3 px-2">
           <Badge className="h-11 w-11 [&_circle]:!fill-[var(--color-forest-deep)]" ring />
           <div>
             <p className="display text-xl leading-none">Babe HQ</p>
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-matcha-soft">Owner dashboard</p>
+            <p className="text-[9.5px] font-semibold text-matcha-soft">Owner dashboard</p>
           </div>
         </div>
         <nav className="mt-10 space-y-1" aria-label="Dashboard">
@@ -132,27 +132,27 @@ export function Dashboard() {
               type="button"
               onClick={() => setView(n.id)}
               aria-current={view === n.id ? "page" : undefined}
-              className={`flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-[15px] transition-colors ${view === n.id ? "bg-cream text-forest" : "text-cream/75 hover:bg-cream/8 hover:text-cream"}`}
+              className={`flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-[15px] transition-colors ${view === n.id ? "bg-cream text-forest" : "text-milk/75 hover:bg-cream/8 hover:text-milk"}`}
             >
               <Icon>{n.icon}</Icon>
               {n.label}
               {n.id === "enquiries" && newCount > 0 && (
-                <span ref={badgeRef} className="ml-auto rounded-full bg-pink px-2 py-0.5 font-mono text-[10.5px] text-paper">{newCount}</span>
+                <span ref={badgeRef} className="ml-auto rounded-full bg-leaf px-2 py-0.5 font-mono text-[10.5px] text-paper">{newCount}</span>
               )}
             </button>
           ))}
         </nav>
         <div data-side className="mt-auto space-y-3">
           <div className="relative overflow-hidden rounded-2xl bg-forest-deep p-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-matcha-soft">Next drop</p>
+            <p className="text-[10px] font-semibold text-matcha-soft">Next drop</p>
             <p className="mt-1 font-medium">{fmtDate(DROPS[0].date)} · {DROPS[0].time}</p>
-            <p className="text-[13px] text-cream/60">{DROPS[0].title}, Edinburg</p>
+            <p className="text-[13px] text-milk/60">{DROPS[0].title}, Edinburg</p>
             <Mascot className="absolute -bottom-3 -right-3 h-16 w-auto opacity-80 [&_*]:[stroke:var(--color-matcha-soft)]" />
           </div>
-          <TransitionLink href="/" className="flex items-center justify-between rounded-2xl px-3.5 py-3 text-[14px] text-cream/70 ring-1 ring-cream/15 transition-colors hover:bg-cream hover:text-forest">
+          <TransitionLink href="/" className="flex items-center justify-between rounded-2xl px-3.5 py-3 text-[14px] text-milk/70 ring-1 ring-cream/15 transition-colors hover:bg-cream hover:text-forest">
             View website <span>↗</span>
           </TransitionLink>
-          <p className="px-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-cream/40">Demo data · resets on reload</p>
+          <p className="px-2 text-[9.5px] font-semibold text-milk/40">Demo data · resets on reload</p>
         </div>
       </aside>
 
@@ -163,13 +163,13 @@ export function Dashboard() {
             <Badge className="h-9 w-9" />
             <span className="display text-lg">Babe HQ</span>
           </div>
-          <TransitionLink href="/" className="rounded-full px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] ring-1 ring-forest/15">Site ↗</TransitionLink>
+          <TransitionLink href="/" className="rounded-full px-3 py-2 text-[10px] font-semibold ring-1 ring-forest/15">Site ↗</TransitionLink>
         </div>
         <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-3">
           {NAV.map((n) => (
-            <button key={n.id} type="button" onClick={() => setView(n.id)} className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-[13.5px] ${view === n.id ? "bg-forest text-cream" : "bg-paper text-forest/70"}`}>
+            <button key={n.id} type="button" onClick={() => setView(n.id)} className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-[13.5px] ${view === n.id ? "bg-forest text-milk" : "bg-paper text-forest/70"}`}>
               {n.label}
-              {n.id === "enquiries" && newCount > 0 && <span className="rounded-full bg-pink px-1.5 font-mono text-[10px] text-paper">{newCount}</span>}
+              {n.id === "enquiries" && newCount > 0 && <span className="rounded-full bg-leaf px-1.5 font-mono text-[10px] text-paper">{newCount}</span>}
             </button>
           ))}
         </div>
@@ -179,19 +179,19 @@ export function Dashboard() {
       <main className="px-4 pb-16 pt-6 md:px-8 md:pt-8 xl:px-12">
         <header data-dash className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-forest/55">{fmtDate("2026-11-04", { weekday: "long", month: "long", day: "numeric" })} · <DemoChip /></p>
+            <p className="text-[11px] font-semibold text-forest/55">{fmtDate("2026-11-04", { weekday: "long", month: "long", day: "numeric" })} · <DemoChip /></p>
             <h1 className="display mt-3 text-[clamp(2.4rem,4.4vw,3.8rem)] leading-none">
-              {greeting}, <span className="text-pink">Babe.</span>
+              {greeting}, <span className="text-leaf">Babe.</span>
             </h1>
             <p className="mt-2 text-forest/65">
               {newCount > 0 ? `${newCount} new ${newCount === 1 ? "request needs" : "requests need"} a reply.` : "You're all caught up."} Everything below came in through your website — no DMs to chase.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={() => copy(`${window.location.origin}/order`, "Pre-order link copied")} className="rounded-full bg-paper px-4 py-3 font-mono text-[10.5px] uppercase tracking-[0.14em] ring-1 ring-forest/12 transition-colors hover:ring-forest/40">
+            <button type="button" onClick={() => copy(`${window.location.origin}/order`, "Pre-order link copied")} className="rounded-full bg-paper px-4 py-3 text-[10.5px] font-semibold ring-1 ring-forest/12 transition-colors hover:ring-forest/40">
               Copy pre-order link
             </button>
-            <TransitionLink href="/order" className="rounded-full bg-forest px-5 py-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-cream transition-colors hover:bg-pink">
+            <TransitionLink href="/order" className="rounded-full bg-forest px-5 py-3 text-[10.5px] font-semibold text-milk transition-colors hover:bg-leaf">
               + New order
             </TransitionLink>
           </div>
@@ -203,28 +203,28 @@ export function Dashboard() {
               {/* stat tiles */}
               <div className="grid grid-cols-2 gap-4 md:gap-5 xl:col-span-12 xl:grid-cols-4">
                 <Card>
-                  <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-forest/55">New requests</p>
+                  <p className="text-[10.5px] font-semibold text-forest/55">New requests</p>
                   <p className="display mt-3 text-5xl leading-none"><Num value={newCount} /></p>
                   <p className="mt-2 text-[13px] text-forest/55">{STATS.enquiriesThisWeek + extraToday} this week</p>
                 </Card>
                 <Card>
-                  <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-forest/55">Cups booked</p>
+                  <p className="text-[10.5px] font-semibold text-forest/55">Cups booked</p>
                   <p className="display mt-3 text-5xl leading-none"><Num value={cups} /><span className="text-2xl text-forest/35"> / {CAPACITY.weekCups}</span></p>
                   <p className="mt-2 text-[13px] text-forest/55">This week, Nov 2–8</p>
                 </Card>
                 <Card>
-                  <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-forest/55">Avg. reply time</p>
+                  <p className="text-[10.5px] font-semibold text-forest/55">Avg. reply time</p>
                   <p className="display mt-3 text-5xl leading-none">1h 40m</p>
                   <p className="mt-2 text-[13px] text-forest/55">No info-gathering DMs</p>
                 </Card>
-                <Card className="bg-forest text-cream ring-0">
-                  <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-matcha-soft">Next drop</p>
+                <Card className="bg-forest text-milk ring-0">
+                  <p className="text-[10.5px] font-semibold text-matcha-soft">Next drop</p>
                   <p className="display mt-3 text-3xl leading-none">{fmtDate(DROPS[0].date, { weekday: "short", month: "short", day: "numeric" })}</p>
-                  <p className="mt-2 text-[13px] text-cream/65">{DROPS[0].title} · Edinburg · {DROPS[0].time}</p>
+                  <p className="mt-2 text-[13px] text-milk/65">{DROPS[0].title} · Edinburg · {DROPS[0].time}</p>
                 </Card>
               </div>
 
-              <Card className="xl:col-span-8" title="Inbox" action={<button type="button" onClick={() => setView("enquiries")} className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-pink">View all →</button>}>
+              <Card className="xl:col-span-8" title="Inbox" action={<button type="button" onClick={() => setView("enquiries")} className="text-[10.5px] font-semibold text-leaf">View all →</button>}>
                 <Inbox items={visible} arrivingId={arriving} onOpen={setOpen} onAdvance={advance} limit={6} />
               </Card>
 
@@ -235,7 +235,7 @@ export function Dashboard() {
                 </Card>
               </div>
 
-              <Card className="xl:col-span-8" title={`This week · ${WEEK.label}`} action={<button type="button" onClick={() => setView("calendar")} className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-pink">Calendar →</button>}>
+              <Card className="xl:col-span-8" title={`This week · ${WEEK.label}`} action={<button type="button" onClick={() => setView("calendar")} className="text-[10.5px] font-semibold text-leaf">Calendar →</button>}>
                 <WeekView enquiries={visible} onOpen={setOpen} compact />
               </Card>
               <Card className="xl:col-span-4" title="Fall menu · on the site" action={<span className="font-mono text-[10px] text-forest/45">live toggles</span>}>
@@ -319,7 +319,7 @@ function CapacityMeter({ cups }: { cups: number }) {
       <div className="mt-2 flex justify-between font-mono text-[10px] text-forest/45">
         <span>0</span><span className="ml-[62%]">80% soft limit</span><span>{CAPACITY.weekCups}</span>
       </div>
-      {pct >= 0.8 && <p className="mt-3 text-[13px] text-pink">✦ Nearly full — new requests will show as waitlist.</p>}
+      {pct >= 0.8 && <p className="mt-3 text-[13px] text-leaf">✦ Nearly full — new requests will show as waitlist.</p>}
     </Card>
   );
 }
@@ -335,11 +335,11 @@ function MiniBars({ extraToday }: { extraToday: number }) {
       <div className="mt-5 flex h-28 items-end gap-2" role="img" aria-label={`Requests per day: ${data.map((d) => `${d.d} ${d.n}`).join(", ")}`}>
         {data.map((d, i) => (
           <div key={d.d} className="group relative flex h-full flex-1 flex-col items-center justify-end">
-            <span className="pointer-events-none absolute -top-7 whitespace-nowrap rounded-md bg-forest px-2 py-1 font-mono text-[10px] text-cream opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="pointer-events-none absolute -top-7 whitespace-nowrap rounded-md bg-forest px-2 py-1 font-mono text-[10px] text-milk opacity-0 transition-opacity group-hover:opacity-100">
               {d.d} · {d.n}
             </span>
             <span
-              className={`w-full max-w-[22px] rounded-t-[4px] transition-[height] duration-700 ease-[var(--ease-babe)] ${i === 6 ? "bg-pink" : "bg-forest"}`}
+              className={`w-full max-w-[22px] rounded-t-[4px] transition-[height] duration-700 ease-[var(--ease-babe)] ${i === 6 ? "bg-leaf" : "bg-forest"}`}
               style={{ height: `${Math.max(3, (d.n / max) * 100)}%`, opacity: d.n ? 1 : 0.18 }}
             />
           </div>
@@ -347,7 +347,7 @@ function MiniBars({ extraToday }: { extraToday: number }) {
       </div>
       <div className="mt-2 flex gap-2 border-t border-forest/10 pt-2">
         {data.map((d, i) => (
-          <span key={d.d} className={`flex-1 text-center font-mono text-[9.5px] ${i === 6 ? "text-pink" : "text-forest/45"}`}>{i === 6 ? "Today" : d.d}</span>
+          <span key={d.d} className={`flex-1 text-center font-mono text-[9.5px] ${i === 6 ? "text-leaf" : "text-forest/45"}`}>{i === 6 ? "Today" : d.d}</span>
         ))}
       </div>
     </div>
@@ -359,7 +359,7 @@ const TONE: Record<string, string> = {
   cream: "bg-cream text-forest",
   lav: "bg-lav/70 text-forest",
   matcha: "bg-matcha-soft text-forest",
-  forest: "bg-forest text-cream",
+  forest: "bg-forest text-milk",
   blush: "bg-blush text-forest",
   ghost: "bg-transparent text-forest/45 ring-1 ring-dashed ring-forest/15",
 };
@@ -373,10 +373,10 @@ function WeekView({ enquiries, onOpen, compact = false }: { enquiries: Enquiry[]
           const blocks = WEEK.blocks.filter((b) => b.iso === d.iso);
           const orders = enquiries.filter((e) => e.date === d.iso);
           return (
-            <div key={d.iso} className={`rounded-2xl p-2 ${today ? "bg-blush-soft ring-1 ring-pink/40" : "bg-cream/70"} ${compact ? "min-h-40" : "min-h-72"}`}>
+            <div key={d.iso} className={`rounded-2xl p-2 ${today ? "bg-blush-soft ring-1 ring-leaf/40" : "bg-cream/70"} ${compact ? "min-h-40" : "min-h-72"}`}>
               <div className="mb-2 flex items-baseline justify-between px-1">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest/55">{d.d}</span>
-                <span className={`display text-xl ${today ? "text-pink" : ""}`}>{d.n}</span>
+                <span className="text-[10px] font-semibold text-forest/55">{d.d}</span>
+                <span className={`display text-xl ${today ? "text-leaf" : ""}`}>{d.n}</span>
               </div>
               <div className="space-y-1.5">
                 {blocks.map((b, i) => (
@@ -390,7 +390,7 @@ function WeekView({ enquiries, onOpen, compact = false }: { enquiries: Enquiry[]
                     key={e.id}
                     type="button"
                     onClick={() => onOpen(e)}
-                    className={`block w-full rounded-xl px-2.5 py-2 text-left transition-transform hover:-translate-y-0.5 ${e.status === "new" || e.status === "quoted" ? "border border-dashed border-pink/60 bg-paper" : "bg-blush"}`}
+                    className={`block w-full rounded-xl px-2.5 py-2 text-left transition-transform hover:-translate-y-0.5 ${e.status === "new" || e.status === "quoted" ? "border border-dashed border-leaf/60 bg-paper" : "bg-blush"}`}
                   >
                     <p className="text-[12px] font-medium leading-tight">{e.name}</p>
                     <p className="text-[10.5px] opacity-70">{e.id} · {e.cups} cups</p>
@@ -403,7 +403,7 @@ function WeekView({ enquiries, onOpen, compact = false }: { enquiries: Enquiry[]
       </div>
       <p className="mt-3 flex flex-wrap gap-4 text-[12px] text-forest/55">
         <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-blush" /> Confirmed order</span>
-        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border border-dashed border-pink" /> Awaiting reply</span>
+        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border border-dashed border-leaf" /> Awaiting reply</span>
         <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-forest" /> Pop-up</span>
       </p>
     </div>
@@ -418,7 +418,7 @@ function MenuToggles({ category, menuOn, toggle }: { category: MenuCategory; men
         <li key={m.id} className="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 hover:bg-cream">
           <span className="min-w-0">
             <span className={`block truncate text-[14.5px] ${menuOn[m.id] ? "" : "text-forest/40 line-through"}`}>{m.name}</span>
-            <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-forest/45">{m.limited ? "Limited time" : CATEGORY_META[m.category].label} · ${m.price}</span>
+            <span className="block text-[10px] font-semibold text-forest/45">{m.limited ? "Limited time" : CATEGORY_META[m.category].label} · ${m.price}</span>
           </span>
           <Toggle on={menuOn[m.id]} onChange={() => toggle(m.id, m.name)} label={`${m.name} on the website`} />
         </li>
@@ -432,7 +432,7 @@ function Settings({ onSave }: { onSave: () => void }) {
   const [lead, setLead] = useState(10);
   const [cap, setCap] = useState(CAPACITY.weekCups);
   const [notify, setNotify] = useState({ email: true, summary: false, waitlist: true });
-  const field = "w-full rounded-2xl bg-cream px-4 py-3.5 text-[16px] outline-none ring-1 ring-forest/10 focus:ring-2 focus:ring-pink";
+  const field = "w-full rounded-2xl bg-cream px-4 py-3.5 text-[16px] outline-none ring-1 ring-forest/10 focus:ring-2 focus:ring-leaf";
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       <Card title="Ordering rules">
@@ -446,7 +446,7 @@ function Settings({ onSave }: { onSave: () => void }) {
             <span className="flex items-center gap-2">
               <button type="button" onClick={() => setLead((v) => Math.max(3, v - 1))} className="h-10 w-10 rounded-full ring-1 ring-forest/15">−</button>
               <span className="w-8 text-center font-mono">{lead}</span>
-              <button type="button" onClick={() => setLead((v) => v + 1)} className="h-10 w-10 rounded-full bg-forest text-cream">+</button>
+              <button type="button" onClick={() => setLead((v) => v + 1)} className="h-10 w-10 rounded-full bg-forest text-milk">+</button>
             </span>
           </div>
           <div className="flex items-center justify-between gap-4">
@@ -454,7 +454,7 @@ function Settings({ onSave }: { onSave: () => void }) {
             <span className="flex items-center gap-2">
               <button type="button" onClick={() => setCap((v) => Math.max(40, v - 10))} className="h-10 w-10 rounded-full ring-1 ring-forest/15">−</button>
               <span className="w-10 text-center font-mono">{cap}</span>
-              <button type="button" onClick={() => setCap((v) => v + 10)} className="h-10 w-10 rounded-full bg-forest text-cream">+</button>
+              <button type="button" onClick={() => setCap((v) => v + 10)} className="h-10 w-10 rounded-full bg-forest text-milk">+</button>
             </span>
           </div>
           <label className="block">
@@ -478,7 +478,7 @@ function Settings({ onSave }: { onSave: () => void }) {
         </ul>
         <div className="mt-6 flex items-center justify-between gap-3 border-t border-forest/10 pt-5">
           <DemoChip />
-          <button type="button" onClick={onSave} className="rounded-full bg-pink px-6 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-paper transition-colors hover:bg-forest">Save changes</button>
+          <button type="button" onClick={onSave} className="rounded-full bg-leaf px-6 py-3 text-[11px] font-semibold text-paper transition-colors hover:bg-forest">Save changes</button>
         </div>
       </Card>
     </div>
@@ -529,7 +529,7 @@ function Drawer({ e, onClose, onAdvance, onCopy }: { e: Enquiry | null; onClose:
             <p className="font-mono text-[11px] text-forest/50">{d.id} · {d.received}</p>
             <p className="display mt-1 text-2xl leading-none">{KIND_LABEL[d.kind]}</p>
           </div>
-          <button type="button" onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-forest/15 hover:bg-forest hover:text-cream" aria-label="Close" autoFocus>✕</button>
+          <button type="button" onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full ring-1 ring-forest/15 hover:bg-forest hover:text-milk" aria-label="Close" autoFocus>✕</button>
         </div>
         <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
           <div className="flex items-center gap-3">
@@ -547,7 +547,7 @@ function Drawer({ e, onClose, onAdvance, onCopy }: { e: Enquiry | null; onClose:
               return (
                 <li key={s}>
                   <span className={`block h-1.5 rounded-full ${reached ? "bg-kelly" : "bg-forest/10"}`} />
-                  <span className={`mt-1.5 block font-mono text-[9.5px] uppercase tracking-[0.12em] ${reached ? "text-forest" : "text-forest/40"}`}>{STATUS_META[s].label}</span>
+                  <span className={`mt-1.5 block text-[9.5px] font-semibold ${reached ? "text-forest" : "text-forest/40"}`}>{STATUS_META[s].label}</span>
                 </li>
               );
             })}
@@ -558,28 +558,28 @@ function Drawer({ e, onClose, onAdvance, onCopy }: { e: Enquiry | null; onClose:
             <div className="flex justify-between gap-4"><dt className="text-forest/55">Order</dt><dd className="text-right">{itemsLine(d)}</dd></div>
             {d.milk && <div className="flex justify-between gap-4"><dt className="text-forest/55">Milk / sweet</dt><dd className="text-right">{d.milk} · {d.sweetness}</dd></div>}
             <div className="flex justify-between gap-4"><dt className="text-forest/55">Cups</dt><dd className="text-right">{d.cups}</dd></div>
-            {d.loyalty && <div className="flex justify-between gap-4"><dt className="text-forest/55">Loyalty</dt><dd className="text-right text-pink">Redeeming free latte</dd></div>}
+            {d.loyalty && <div className="flex justify-between gap-4"><dt className="text-forest/55">Loyalty</dt><dd className="text-right text-leaf">Redeeming free latte</dd></div>}
             <div className="flex justify-between gap-4 border-t border-forest/10 pt-3"><dt className="text-forest/55">Est. total</dt><dd className="display text-2xl">${d.total.toFixed(2)}</dd></div>
           </dl>
           {d.note && (
             <div>
-              <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-forest/50">Note</p>
+              <p className="text-[10.5px] font-semibold text-forest/50">Note</p>
               <p className="serif mt-2 text-xl leading-snug">&ldquo;{d.note}&rdquo;</p>
             </div>
           )}
           <div className="rounded-2xl bg-matcha-mist p-4">
-            <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-forest/60">Suggested reply</p>
+            <p className="text-[10.5px] font-semibold text-forest/60">Suggested reply</p>
             <p className="mt-2 text-[14px] leading-relaxed text-forest/80">{reply}</p>
           </div>
         </div>
         <div className="flex gap-2 border-t border-forest/10 px-6 py-5">
-          <button type="button" onClick={() => onCopy(reply, "Reply copied")} className="flex-1 rounded-full px-4 py-3.5 font-mono text-[10.5px] uppercase tracking-[0.14em] ring-1 ring-forest/15 transition-colors hover:bg-cream">Copy reply</button>
+          <button type="button" onClick={() => onCopy(reply, "Reply copied")} className="flex-1 rounded-full px-4 py-3.5 text-[10.5px] font-semibold ring-1 ring-forest/15 transition-colors hover:bg-cream">Copy reply</button>
           {next ? (
-            <button type="button" onClick={() => onAdvance(d, next.to)} className="flex-1 rounded-full bg-forest px-4 py-3.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-cream transition-colors hover:bg-pink">
+            <button type="button" onClick={() => onAdvance(d, next.to)} className="flex-1 rounded-full bg-forest px-4 py-3.5 text-[10.5px] font-semibold text-milk transition-colors hover:bg-leaf">
               {next.label} <Sparkle className="ml-1 inline h-3 w-3" />
             </button>
           ) : (
-            <span className="flex-1 rounded-full bg-matcha-soft px-4 py-3.5 text-center font-mono text-[10.5px] uppercase tracking-[0.14em]">Ready for pick-up ✓</span>
+            <span className="flex-1 rounded-full bg-matcha-soft px-4 py-3.5 text-center text-[10.5px] font-semibold">Ready for pick-up ✓</span>
           )}
         </div>
       </div>

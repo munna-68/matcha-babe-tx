@@ -101,7 +101,7 @@ export function Confirmation({ enquiry }: { enquiry: Enquiry }) {
 
           <h1 data-head className="display flex flex-wrap overflow-hidden text-[clamp(3.6rem,9vw,8.6rem)] text-forest" aria-label="Sent, Babe!">
             {"Sent, Babe!".split("").map((c, i) => (
-              <span key={i} className={`inline-block ${c === " " ? "w-[0.3em]" : ""} ${i > 5 ? "text-pink" : ""}`} aria-hidden>{c}</span>
+              <span key={i} className={`inline-block ${c === " " ? "w-[0.3em]" : ""} ${i > 5 ? "text-leaf" : ""}`} aria-hidden>{c}</span>
             ))}
           </h1>
           <p data-c className="serif mt-6 max-w-xl text-[clamp(1.5rem,2.2vw,2rem)] leading-snug text-forest/85">
@@ -115,7 +115,7 @@ export function Confirmation({ enquiry }: { enquiry: Enquiry }) {
               ["03", "Grab & glow", "Pick up, Scan 2 Pay, collect your stamp."],
             ].map(([n, t, b]) => (
               <li key={n} className="rounded-[22px] bg-paper p-5 ring-1 ring-forest/10">
-                <span className="font-mono text-[11px] text-pink">{n}</span>
+                <span className="font-mono text-[11px] text-leaf">{n}</span>
                 <p className="display mt-2 text-xl leading-none">{t}</p>
                 <p className="mt-2 text-[14px] text-forest/65">{b}</p>
               </li>
@@ -127,24 +127,24 @@ export function Confirmation({ enquiry }: { enquiry: Enquiry }) {
               onClick={goDashboard}
               data-magnetic="0.3"
               data-cursor="Watch"
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-forest px-7 py-4 font-mono text-[12px] uppercase tracking-[0.18em] text-cream"
+              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-forest px-7 py-4 text-[12px] font-semibold text-milk"
             >
-              <span className="absolute inset-0 translate-y-full rounded-full bg-pink transition-transform duration-700 ease-[var(--ease-babe)] group-hover:translate-y-0" />
+              <span className="absolute inset-0 translate-y-full rounded-full bg-leaf transition-transform duration-700 ease-[var(--ease-babe)] group-hover:translate-y-0" />
               <span className="relative">Watch it land in Babe HQ</span>
               <span className="relative transition-transform duration-500 group-hover:translate-x-1">→</span>
             </button>
             <ButtonLink href="/" variant="ghost" arrow={false}>Back home</ButtonLink>
           </div>
-          <p data-c className="mt-6 font-mono text-[10.5px] uppercase tracking-[0.14em] text-forest/45">
+          <p data-c className="mt-6 text-[10.5px] font-semibold text-forest/45">
             Demo · nothing was actually sent. Saved in this tab only.
           </p>
         </div>
 
         <div className="md:col-span-5">
-          <div ref={ticket} className="relative mx-auto max-w-sm rotate-[3deg] rounded-[26px] bg-paper p-7 shadow-[0_50px_90px_-50px_rgba(5,63,28,.8)] ring-1 ring-forest/10">
+          <div ref={ticket} className="relative mx-auto max-w-sm rotate-[3deg] rounded-[26px] bg-paper p-7 shadow-[0_50px_90px_-50px_rgba(31,58,31,.8)] ring-1 ring-forest/10">
             <div className="flex items-center justify-between">
               <span className="label !text-[10px] text-forest/50">Request</span>
-              <span className="rounded-full bg-pink px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-paper">New</span>
+              <span className="rounded-full bg-leaf px-3 py-1 text-[10px] font-semibold text-paper">New</span>
             </div>
             <p className="display mt-3 text-5xl text-forest">{enquiry.id}</p>
             <div className="my-5 border-t-2 border-dashed border-forest/15" />

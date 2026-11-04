@@ -19,7 +19,7 @@ import { DROPS, MENU, MILKS, SWEETNESS, KIND_LABEL, HOLIDAY_CUTOFF, type Enquiry
 import { fmtDate } from "@/lib/dates";
 
 const input =
-  "w-full rounded-2xl bg-paper px-5 py-4 text-[16px] text-forest placeholder:text-forest/35 outline-none ring-1 ring-forest/15 transition-shadow focus:ring-2 focus:ring-pink";
+  "w-full rounded-2xl bg-paper px-5 py-4 text-[16px] text-forest placeholder:text-forest/35 outline-none ring-1 ring-forest/15 transition-shadow focus:ring-2 focus:ring-leaf";
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
@@ -28,7 +28,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       onClick={onClick}
       aria-pressed={active}
       className={`min-h-11 rounded-full px-5 py-2.5 text-[15px] transition-all duration-300 ${
-        active ? "bg-forest text-cream shadow-[0_10px_24px_-14px_rgba(5,63,28,.9)]" : "bg-paper text-forest ring-1 ring-forest/15 hover:ring-forest/40"
+        active ? "bg-forest text-milk shadow-[0_10px_24px_-14px_rgba(31,58,31,.9)]" : "bg-paper text-forest ring-1 ring-forest/15 hover:ring-forest/40"
       }`}
     >
       {children}
@@ -51,9 +51,9 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 function Stepper({ value, onDec, onInc, label }: { value: number; onDec: () => void; onInc: () => void; label: string }) {
   return (
     <div className="flex items-center gap-1 rounded-full bg-cream p-1 ring-1 ring-forest/10">
-      <button type="button" onClick={onDec} disabled={value === 0} aria-label={`Remove one ${label}`} className="grid h-10 w-10 place-items-center rounded-full text-lg transition-colors hover:bg-forest hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest">−</button>
+      <button type="button" onClick={onDec} disabled={value === 0} aria-label={`Remove one ${label}`} className="grid h-10 w-10 place-items-center rounded-full text-lg transition-colors hover:bg-forest hover:text-milk disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest">−</button>
       <span className="w-8 text-center font-mono tabular-nums" aria-live="polite">{value}</span>
-      <button type="button" onClick={onInc} aria-label={`Add one ${label}`} className="grid h-10 w-10 place-items-center rounded-full bg-forest text-lg text-cream transition-colors hover:bg-pink">+</button>
+      <button type="button" onClick={onInc} aria-label={`Add one ${label}`} className="grid h-10 w-10 place-items-center rounded-full bg-forest text-lg text-milk transition-colors hover:bg-leaf">+</button>
     </div>
   );
 }
@@ -69,7 +69,7 @@ function Ticket({ s, compact = false }: { s: OrderState; compact?: boolean }) {
     ["Name", s.name.trim() || null],
   ];
   return (
-    <div className={`relative rounded-[22px] bg-paper text-forest shadow-[0_30px_70px_-40px_rgba(5,63,28,.7)] ${compact ? "p-5" : "p-6"}`}>
+    <div className={`relative rounded-[22px] bg-paper text-forest shadow-[0_30px_70px_-40px_rgba(31,58,31,.7)] ${compact ? "p-5" : "p-6"}`}>
       <div className="flex items-center justify-between">
         <span className="display text-xl leading-none">Your ticket</span>
         <DemoTag className="text-forest" />
@@ -78,7 +78,7 @@ function Ticket({ s, compact = false }: { s: OrderState; compact?: boolean }) {
       <dl className="space-y-2 text-[14px]">
         {rows.map(([k, v]) => (
           <div key={k} className="flex justify-between gap-4">
-            <dt className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-forest/45">{k}</dt>
+            <dt className="text-[10.5px] font-semibold text-forest/45">{k}</dt>
             <dd className={`truncate text-right ${v ? "" : "text-forest/30"}`}>{v ?? "—"}</dd>
           </div>
         ))}
@@ -100,7 +100,7 @@ function Ticket({ s, compact = false }: { s: OrderState; compact?: boolean }) {
               <li className="flex justify-between gap-3 text-forest/70"><span>{s.milk} milk</span><span className="font-mono">{money(t.milk)}</span></li>
             )}
             {t.loyalty < 0 && (
-              <li className="flex justify-between gap-3 text-pink"><span>Loyalty · free latte</span><span className="font-mono">{money(t.loyalty)}</span></li>
+              <li className="flex justify-between gap-3 text-leaf"><span>Loyalty · free latte</span><span className="font-mono">{money(t.loyalty)}</span></li>
             )}
           </ul>
         </>
@@ -229,9 +229,9 @@ export function OrderFlow() {
         </aside>
 
         {/* form */}
-        <div className="md:col-span-7" ref={top}>
+        <div className="min-w-0 md:col-span-7" ref={top}>
           <div className="flex items-center justify-between gap-4">
-            <TrackedLabel trigger="stage" className="text-pink">{`Pre-order · Step ${step + 1} of 5`}</TrackedLabel>
+            <TrackedLabel trigger="stage" className="text-leaf">{`Pre-order · Step ${step + 1} of 5`}</TrackedLabel>
             <span className="label hidden !text-[10px] text-forest/45 sm:inline">No DMs needed</span>
           </div>
           {/* progress */}
@@ -246,9 +246,9 @@ export function OrderFlow() {
                   aria-current={i === step ? "step" : undefined}
                 >
                   <span className="block h-1.5 overflow-hidden rounded-full bg-forest/10">
-                    <span className={`block h-full origin-left rounded-full bg-forest transition-transform duration-700 ease-[var(--ease-babe)] ${i <= step ? "scale-x-100" : "scale-x-0"} ${i === step ? "!bg-pink" : ""}`} />
+                    <span className={`block h-full origin-left rounded-full bg-forest transition-transform duration-700 ease-[var(--ease-babe)] ${i <= step ? "scale-x-100" : "scale-x-0"} ${i === step ? "!bg-matcha" : ""}`} />
                   </span>
-                  <span className={`mt-2 hidden font-mono text-[10px] uppercase tracking-[0.16em] sm:block ${i === step ? "text-forest" : "text-forest/40"}`}>{l}</span>
+                  <span className={`mt-2 hidden text-[10px] font-semibold sm:block ${i === step ? "text-forest" : "text-forest/40"}`}>{l}</span>
                 </button>
               </li>
             ))}
@@ -274,7 +274,7 @@ export function OrderFlow() {
                       aria-pressed={active}
                       onClick={() => set({ kind: o.k, qty: {}, dropId: s.kind === o.k ? s.dropId : o.k === "pickup" ? s.dropId : null, date: null })}
                       className={`group relative flex items-center gap-4 overflow-hidden rounded-[26px] p-3 text-left transition-all duration-500 sm:flex-col sm:items-stretch sm:p-3 ${
-                        active ? "bg-forest text-cream shadow-[0_24px_50px_-28px_rgba(5,63,28,.9)]" : "bg-paper ring-1 ring-forest/12 hover:ring-forest/35"
+                        active ? "bg-forest text-milk shadow-[0_24px_50px_-28px_rgba(31,58,31,.9)]" : "bg-paper ring-1 ring-forest/12 hover:ring-forest/35"
                       }`}
                     >
                       <span className="block w-24 shrink-0 sm:w-full">
@@ -282,9 +282,9 @@ export function OrderFlow() {
                       </span>
                       <span className="block sm:px-2 sm:pb-3">
                         <span className="display block text-2xl leading-none">{o.title}</span>
-                        <span className={`mt-2 block text-[14px] ${active ? "text-cream/70" : "text-forest/65"}`}>{o.body}</span>
+                        <span className={`mt-2 block text-[14px] ${active ? "text-milk/70" : "text-forest/65"}`}>{o.body}</span>
                       </span>
-                      <span className={`absolute right-4 top-4 grid h-7 w-7 place-items-center rounded-full transition-all duration-500 ${active ? "scale-100 bg-pink text-paper" : "scale-75 bg-cream text-transparent ring-1 ring-forest/20"}`}>✓</span>
+                      <span className={`absolute right-4 top-4 grid h-7 w-7 place-items-center rounded-full transition-all duration-500 ${active ? "scale-100 bg-leaf text-milk" : "scale-75 bg-cream text-transparent ring-1 ring-forest/20"}`}>✓</span>
                     </button>
                   );
                 })}
@@ -364,7 +364,7 @@ export function OrderFlow() {
                   <input
                     type="range" min={10} max={150} step={5} value={s.guests}
                     onChange={(e) => set({ guests: Number(e.target.value) })}
-                    className="h-11 w-full cursor-pointer accent-[var(--color-pink)]"
+                    className="h-11 w-full cursor-pointer accent-[var(--color-leaf)]"
                     aria-label="Guest count"
                   />
                   <div className="flex justify-between font-mono text-[10px] text-forest/45"><span>10</span><span>150</span></div>
@@ -374,9 +374,9 @@ export function OrderFlow() {
                     const active = s.pkg === p.id;
                     return (
                       <button key={p.id} type="button" aria-pressed={active} onClick={() => set({ pkg: p.id })}
-                        className={`rounded-[22px] p-5 text-left transition-all duration-500 ${active ? "bg-forest text-cream" : "bg-paper ring-1 ring-forest/12 hover:ring-forest/35"}`}>
+                        className={`rounded-[22px] p-5 text-left transition-all duration-500 ${active ? "bg-forest text-milk" : "bg-paper ring-1 ring-forest/12 hover:ring-forest/35"}`}>
                         <span className="display block text-xl leading-tight">{p.title}</span>
-                        <span className={`mt-2 block text-[13.5px] ${active ? "text-cream/70" : "text-forest/60"}`}>{p.body}</span>
+                        <span className={`mt-2 block text-[13.5px] ${active ? "text-milk/70" : "text-forest/60"}`}>{p.body}</span>
                         <span className="mt-4 block font-mono text-[12px]">~${p.perGuest}/guest · demo</span>
                       </button>
                     );
@@ -405,10 +405,10 @@ export function OrderFlow() {
                   const active = s.dropId === d.id;
                   return (
                     <button key={d.id} data-si type="button" aria-pressed={active} onClick={() => set({ dropId: d.id })}
-                      className={`flex w-full items-center gap-5 rounded-[24px] p-4 text-left transition-all duration-500 sm:p-5 ${active ? "bg-forest text-cream shadow-[0_24px_50px_-28px_rgba(5,63,28,.9)]" : "bg-paper ring-1 ring-forest/12 hover:ring-forest/35"}`}>
-                      <span className={`grid h-16 w-16 shrink-0 place-items-center rounded-2xl text-center ${active ? "bg-pink text-paper" : "bg-cream"}`}>
+                      className={`flex w-full items-center gap-5 rounded-[24px] p-4 text-left transition-all duration-500 sm:p-5 ${active ? "bg-forest text-milk shadow-[0_24px_50px_-28px_rgba(31,58,31,.9)]" : "bg-paper ring-1 ring-forest/12 hover:ring-forest/35"}`}>
+                      <span className={`grid h-16 w-16 shrink-0 place-items-center rounded-2xl text-center ${active ? "bg-leaf text-milk" : "bg-cream"}`}>
                         <span className="leading-none">
-                          <span className="block font-mono text-[9.5px] uppercase tracking-[0.2em] opacity-70">{d.day}</span>
+                          <span className="block text-[9.5px] font-semibold opacity-70">{d.day}</span>
                           <span className="display block text-2xl">{d.date.slice(8)}</span>
                         </span>
                       </span>
@@ -417,9 +417,9 @@ export function OrderFlow() {
                           {d.title}
                           {!d.real && <DemoTag />}
                         </span>
-                        <span className={`block truncate text-[14px] ${active ? "text-cream/70" : "text-forest/60"}`}>{fmtDate(d.date, { month: "long", day: "numeric" })} · {d.time} · {d.place}</span>
+                        <span className={`block truncate text-[14px] ${active ? "text-milk/70" : "text-forest/60"}`}>{fmtDate(d.date, { month: "long", day: "numeric" })} · {d.time} · {d.place}</span>
                       </span>
-                      {active && <Sparkle className="h-5 w-5 shrink-0 text-pink" />}
+                      {active && <Sparkle className="h-5 w-5 shrink-0 text-leaf" />}
                     </button>
                   );
                 })}
@@ -430,7 +430,7 @@ export function OrderFlow() {
             {step === 2 && s.kind !== "pickup" && (
               <div className="mt-8 space-y-6">
                 <div data-si className="flex items-start gap-3 rounded-2xl bg-blush-soft px-5 py-4 text-[14.5px] text-forest">
-                  <Sparkle className="mt-1 h-4 w-4 shrink-0 text-pink" />
+                  <Sparkle className="mt-1 h-4 w-4 shrink-0 text-leaf" />
                   <span>
                     <strong>Holiday orders close Sat, Dec 19.</strong> We&rsquo;re on break Dec 20 – Jan 3.{" "}
                     {s.kind === "event" ? "Events need 10 days’ notice." : "Bottles need 3 days’ notice."}
@@ -440,7 +440,7 @@ export function OrderFlow() {
                   <Calendar value={s.date} onChange={(d) => set({ date: d })} earliest={earliestDate(s.kind)} latest={latestDate()} />
                 </div>
                 {s.date && isHolidayWindow(s.date) && (
-                  <p data-si className="text-[14px] text-pink">✦ Holiday rush date — we&rsquo;ll confirm availability fast.</p>
+                  <p data-si className="text-[14px] text-leaf">✦ Holiday rush date — we&rsquo;ll confirm availability fast.</p>
                 )}
                 {s.kind === "event" && (
                   <div data-si>
@@ -499,7 +499,7 @@ export function OrderFlow() {
                 {s.kind === "pickup" && (
                   <label data-si className="flex cursor-pointer items-center gap-4 rounded-2xl bg-paper px-5 py-4 ring-1 ring-forest/12">
                     <input type="checkbox" checked={s.loyalty} onChange={(e) => set({ loyalty: e.target.checked })} className="peer sr-only" />
-                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg ring-2 ring-forest/25 transition-all peer-checked:bg-pink peer-checked:ring-pink peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-pink">
+                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg ring-2 ring-forest/25 transition-all peer-checked:bg-leaf peer-checked:ring-leaf peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-leaf">
                       <span className={`text-paper transition-transform ${s.loyalty ? "scale-100" : "scale-0"}`}>✓</span>
                     </span>
                     <span>
@@ -533,13 +533,13 @@ export function OrderFlow() {
                       <p className="label !text-[10px] text-forest/50">{r.k}</p>
                       <p className="mt-1 text-[16px]">{r.v}</p>
                     </div>
-                    <button type="button" onClick={() => go(r.to)} className="label shrink-0 pt-1 !text-[10px] text-pink underline-offset-4 hover:underline">Edit</button>
+                    <button type="button" onClick={() => go(r.to)} className="label shrink-0 pt-1 !text-[10px] text-leaf underline-offset-4 hover:underline">Edit</button>
                   </div>
                 ))}
-                <div data-si className="flex items-center justify-between rounded-[22px] bg-forest px-6 py-5 text-cream">
+                <div data-si className="flex items-center justify-between rounded-[22px] bg-forest px-6 py-5 text-milk">
                   <div>
                     <p className="label !text-[10px] text-matcha-soft">{s.kind === "event" ? "Estimate" : "Estimated total"} · demo</p>
-                    <p className="mt-1 text-[13.5px] text-cream/70">
+                    <p className="mt-1 text-[13.5px] text-milk/70">
                       {s.loyalty ? "Includes your free latte. " : ""}Nothing is charged now — pay at pick-up with Scan 2 Pay{s.kind === "event" ? " or by quote" : ""}.
                     </p>
                   </div>
@@ -575,16 +575,16 @@ export function OrderFlow() {
 
       {/* mobile sticky action bar */}
       <div className="fixed inset-x-0 bottom-0 z-[96] px-3 pb-[calc(12px+env(safe-area-inset-bottom))] md:hidden">
-        <div className="flex items-center gap-2 rounded-[26px] bg-paper/95 p-2 shadow-[0_-10px_50px_-20px_rgba(5,63,28,.45)] ring-1 ring-forest/10 backdrop-blur-md">
+        <div className="flex items-center gap-2 rounded-[26px] bg-paper/95 p-2 shadow-[0_-10px_50px_-20px_rgba(31,58,31,.45)] ring-1 ring-forest/10 backdrop-blur-md">
           <button type="button" onClick={() => go(step - 1)} disabled={step === 0} aria-label="Back" className="grid h-12 w-12 shrink-0 place-items-center rounded-full ring-1 ring-forest/15 disabled:opacity-30">←</button>
           <button type="button" onClick={() => setMobileTicket((v) => !v)} className="min-w-0 flex-1 px-1 text-left" aria-expanded={mobileTicket}>
-            <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-forest/50">{count > 0 ? `${count} ${s.kind === "event" ? "guests" : "items"} · tap for ticket` : check.ok ? "Ready" : check.hint}</span>
+            <span className="block text-[10px] font-semibold text-forest/50">{count > 0 ? `${count} ${s.kind === "event" ? "guests" : "items"} · tap for ticket` : check.ok ? "Ready" : check.hint}</span>
             <span className="display block text-xl leading-tight">{money(t.total)}</span>
           </button>
           {step < 4 ? (
-            <button type="button" onClick={() => go(step + 1)} disabled={!check.ok} className="h-12 shrink-0 rounded-full bg-pink px-6 font-mono text-[12px] uppercase tracking-[0.16em] text-paper transition-opacity disabled:opacity-35">Continue</button>
+            <button type="button" onClick={() => go(step + 1)} disabled={!check.ok} className="h-12 shrink-0 rounded-full bg-leaf px-6 text-[12px] font-semibold text-paper transition-opacity disabled:opacity-35">Continue</button>
           ) : (
-            <button type="button" onClick={send} className="h-12 shrink-0 rounded-full bg-forest px-6 font-mono text-[12px] uppercase tracking-[0.16em] text-cream">Send ✦</button>
+            <button type="button" onClick={send} className="h-12 shrink-0 rounded-full bg-forest px-6 text-[12px] font-semibold text-milk">Send ✦</button>
           )}
         </div>
       </div>

@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import fs from "node:fs";
 import path from "node:path";
-import { Bagel_Fat_One, Instrument_Serif, Caveat, DM_Mono, DM_Sans } from "next/font/google";
+import { DynaPuff, Figtree } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const bagel = Bagel_Fat_One({ variable: "--font-bagel", weight: "400", subsets: ["latin"], display: "swap" });
-const instrument = Instrument_Serif({ variable: "--font-instrument", weight: "400", style: ["normal", "italic"], subsets: ["latin"], display: "swap" });
-const caveat = Caveat({ variable: "--font-caveat", weight: ["500", "700"], subsets: ["latin"], display: "swap" });
-const dmMono = DM_Mono({ variable: "--font-dm-mono", weight: ["400", "500"], subsets: ["latin"], display: "swap" });
-const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"], display: "swap" });
+// Display: DynaPuff, a puffy rounded face close to the Matcha Babe wordmark.
+// Width axis lets headings run a touch narrower than the hero word.
+const puff = DynaPuff({ variable: "--font-puff", subsets: ["latin"], axes: ["wdth"], display: "swap" });
+// Text + UI: Figtree, a friendly geometric sans.
+const figtree = Figtree({ variable: "--font-figtree", subsets: ["latin"], display: "swap" });
 
 const hasOg = fs.existsSync(path.join(process.cwd(), "public", "images", "og-image.webp"));
 
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = { themeColor: "#053f1c" };
+export const viewport: Viewport = { themeColor: "#eee6cf" };
 
 /** Which image slots have a real file in /public/images (read on the server). */
 function availableSlots(): string[] {
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${bagel.variable} ${instrument.variable} ${caveat.variable} ${dmMono.variable} ${dmSans.variable}`}
+      className={`${puff.variable} ${figtree.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT }} />

@@ -2,174 +2,179 @@
 
 import { useRef } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
-import { onStage } from "@/lib/stage";
-import { SplitReveal } from "@/components/motion/SplitReveal";
-import { ScriptWrite, TrackedLabel, RevealImage, Marquee } from "@/components/motion/primitives";
+import { onStage, introOwnsHeroWord } from "@/lib/stage";
 import { BrandImage } from "@/components/image/BrandImage";
 import { ButtonLink } from "@/components/brand/Button";
-import { HeartSticker, Mascot, Sparkle, SpinBadge, Badge } from "@/components/brand/Brand";
+import { Wordmark, SpeedDashes, BrushUnderline, HeartDoodle, LeafShadow, Icon, SpinBadge, HeartSticker } from "@/components/brand/Brand";
 import { TransitionLink } from "@/components/motion/PageTransition";
-import { BRAND, DROPS, FLAVOR_MARQUEE } from "@/data/mock";
+import { DROPS } from "@/data/mock";
 
+const FEATURES = [
+  { icon: "leaf", text: ["Organic", "ceremonial grade"] },
+  { icon: "whisk", text: ["Whisked the", "moment you order"] },
+  { icon: "heart", text: ["Pop-ups &", "private events"] },
+] as const;
+
+/**
+ * HERO — rebuilt from the reference: tracked line, the giant bouncy
+ * wordmark with speed dashes, a light tagline with a brush underline,
+ * the pill, and three small promises. Right: her photo in an arch on a
+ * leaf-green disc, with hand-drawn hearts. Sunlight-through-leaves
+ * shadows drift across the wall.
+ */
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const next = DROPS[0];
+  const nextDate = new Date(next.date + "T12:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 
   useGSAP(
     (_c, contextSafe) => {
       const el = ref.current;
       if (!el || !contextSafe) return;
       const q = gsap.utils.selector(el);
-      const reduced = prefersReducedMotion();
-      const pops = q("[data-pop]");
+      // (gsap.matchMedia nested in useGSAP recursed in Context.getTweens, so read the queries directly)
+      const reduce = prefersReducedMotion();
+      const desk = window.matchMedia("(min-width: 768px)").matches;
+      const ownsWord = introOwnsHeroWord();
+      const chars = q("[data-hero-word] [data-wm-char]");
       const fades = q("[data-fade]");
-      gsap.set(pops, { scale: 0, rotate: -30 });
-      gsap.set(fades, { opacity: 0, y: reduced ? 0 : 30 });
+      const frame = q("[data-arch] [data-brand-img]")[0];
+      const inner = q("[data-arch] [data-img-inner]")[0];
+      const draws = q("[data-hero-draw] [data-draw]");
+
+      if (reduce) {
+        gsap.set(fades, { opacity: 0 });
+        return onStage(contextSafe(() => gsap.to(fades, { opacity: 1, duration: 0.8, stagger: 0.05 })));
+      }
+
+      // initial states (set before first paint via layout effect)
+      if (!ownsWord) gsap.set(chars, { yPercent: 115, rotate: 10 });
+      gsap.set(fades, { opacity: 0, y: 28 });
+      gsap.set(q("[data-dash]"), { scaleX: 0, transformOrigin: "0% 50%" });
+      gsap.set(draws, { strokeDasharray: 1, strokeDashoffset: 1 });
+      gsap.set(q("[data-disc]"), { scale: 0.4, opacity: 0 });
+      gsap.set(frame, { clipPath: "inset(100% 0% 0% 0% round 999px 999px 36px 36px)" });
+      gsap.set(inner, { scale: 1.35 });
+      gsap.set(q("[data-pop]"), { scale: 0, rotate: -25 });
 
       const un = onStage(
         contextSafe(() => {
-          gsap.to(fades, { opacity: 1, y: 0, duration: 1.1, stagger: 0.1, delay: 0.75, ease: "babe" });
-          gsap.to(pops, { scale: 1, rotate: 0, duration: 1.1, stagger: 0.12, delay: 1.0, ease: "back.out(1.8)" });
+          const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+          const t0 = ownsWord ? 0.05 : 0.15;
+          tl.to(q("[data-disc]"), { scale: 1, opacity: 1, duration: 1.8 }, 0)
+            .to(frame, { clipPath: "inset(0% 0% 0% 0% round 999px 999px 36px 36px)", duration: 1.6 }, 0.1)
+            .to(inner, { scale: 1, duration: 2.2 }, 0.1);
+          if (!ownsWord) tl.to(chars, { yPercent: 0, rotate: 0, duration: 1.1, stagger: 0.045, ease: "back.out(1.5)" }, t0);
+          tl.to(q("[data-dash]"), { scaleX: 1, duration: 0.6, stagger: 0.08, ease: "power3.out" }, ownsWord ? 0.35 : 0.75)
+            .to(fades, { opacity: 1, y: 0, duration: 1.1, stagger: 0.07 }, 0.3)
+            .to(draws, { strokeDashoffset: 0, duration: 1.1, stagger: 0.15, ease: "power2.inOut" }, 0.8)
+            .to(q("[data-pop]"), { scale: 1, rotate: 0, duration: 1, stagger: 0.1, ease: "back.out(1.8)" }, 0.9);
         }),
       );
 
-      if (!reduced) {
-        // scroll parallax on stickers
-        q("[data-speed]").forEach((s) => {
-          const speed = Number((s as HTMLElement).dataset.speed);
-          gsap.to(s, {
-            yPercent: speed * -100,
-            ease: "none",
-            scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true },
-          });
-        });
-        // the headline drifts up a touch slower than the page
-        gsap.to(q("[data-hero-copy]"), {
-          yPercent: -8,
-          ease: "none",
-          scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true },
-        });
-      }
+      // scroll: the scene drifts apart as you leave it
+      const st = { trigger: el, start: "top top", end: "bottom top", scrub: true } as const;
+      gsap.to(q("[data-hero-copy]"), { yPercent: desk ? -22 : -8, ease: "none", scrollTrigger: st });
+      gsap.to(q("[data-arch-wrap]"), { yPercent: desk ? -10 : -4, ease: "none", scrollTrigger: st });
+      gsap.to(inner, { yPercent: 7, ease: "none", scrollTrigger: st });
+      gsap.to(q("[data-disc-wrap]"), { yPercent: 14, ease: "none", scrollTrigger: st });
+      gsap.to(q("[data-leaves]"), { yPercent: -18, ease: "none", scrollTrigger: st });
       return un;
     },
     { scope: ref },
   );
 
   return (
-    <>
-      <section ref={ref} className="relative overflow-hidden px-5 pb-14 pt-28 md:px-10 md:pb-20 md:pt-36">
-        {/* soft matcha glow */}
-        <div aria-hidden className="pointer-events-none absolute -right-[20vw] -top-[20vw] h-[70vw] w-[70vw] rounded-full bg-[radial-gradient(closest-side,rgba(200,217,156,.55),transparent)]" />
-        <div className="relative mx-auto grid max-w-[1500px] items-end gap-12 md:grid-cols-12 md:gap-8">
-          <div data-hero-copy className="relative z-10 md:col-span-7">
-            <div data-hero>
-              <TrackedLabel trigger="stage" className="text-forest/70">{`${BRAND.area} · Pop-ups & private events`}</TrackedLabel>
+    <section ref={ref} className="relative isolate overflow-hidden">
+      {/* light through leaves */}
+      <div data-leaves aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <LeafShadow className="-left-[6vw] -top-[4vw] w-[46vw] rotate-[8deg]" />
+        <LeafShadow className="right-[18vw] -top-[10vw] w-[34vw] -scale-x-100 rotate-[20deg]" />
+        <LeafShadow className="-bottom-[8vw] -left-[10vw] w-[30vw] rotate-[-40deg] opacity-[0.08]" />
+      </div>
+
+      <div className="mx-auto grid min-h-[100dvh] max-w-[1440px] items-center gap-12 px-[var(--gutter)] pb-14 pt-32 md:grid-cols-12 md:gap-6 md:pb-16 md:pt-36">
+        <div data-hero-copy className="relative z-10 min-w-0 md:col-span-7 lg:col-span-6">
+          <p data-fade className="eyebrow text-forest/80">Organic ceremonial matcha</p>
+
+          {/* font-size lives on the wrapper so the dashes can sit in em next to "BABE" */}
+          <div className="relative mt-6 inline-block text-[20.5vw] md:mt-7 md:text-[clamp(5.5rem,10.4vw,10.25rem)]">
+            <h1 data-hero-word className="relative text-forest">
+              <Wordmark />
+            </h1>
+            <SpeedDashes className="absolute bottom-[0.14em] left-[3.42em] w-[0.5em] text-forest" />
+          </div>
+
+          <div data-fade className="relative mt-6 w-fit md:mt-8">
+            <p className="text-[clamp(1.35rem,2.1vw,2rem)] font-normal tracking-[0.08em] text-forest/90 md:pl-[0.3em]">Handcrafted to order.</p>
+            <span data-hero-draw className="block text-leaf/70">
+              <BrushUnderline className="mt-1 h-3 w-[78%] md:ml-[0.4em]" />
+            </span>
+          </div>
+
+          <div data-fade className="mt-8 flex flex-wrap items-center gap-3 md:mt-10">
+            <ButtonLink href="/order">Pre-order a drink</ButtonLink>
+            <ButtonLink href="/menu" variant="ghost" arrow={false}>See the menu</ButtonLink>
+          </div>
+
+          <ul className="mt-12 flex max-w-[34rem] items-stretch md:mt-16">
+            {FEATURES.map((f, i) => (
+              <li key={f.icon} data-fade className={`flex flex-1 flex-col items-center gap-2 px-2 text-center ${i ? "border-l border-forest/25" : ""}`}>
+                <Icon name={f.icon} className="h-7 w-7 text-forest" />
+                <span className="text-[13px] font-medium leading-tight text-forest/90 md:text-[14px]">
+                  {f.text[0]}
+                  <br />
+                  {f.text[1]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* her photo in an arch */}
+        <div className="relative md:col-span-5 lg:col-span-6">
+          {/* field-green disc (the reference's arch) */}
+          <div data-disc-wrap aria-hidden className="pointer-events-none absolute -z-10 left-[-4%] top-[16%] aspect-square w-[128%] md:left-[18%] md:top-[6%] md:w-[118%]">
+            <div data-disc className="h-full w-full rounded-full bg-leaf" />
+          </div>
+          <div data-arch-wrap className="relative mx-auto w-[82%] max-w-[480px] md:mr-[11%] md:w-[min(30vw,calc(70vh*0.75))]">
+            <div data-arch>
+              <BrandImage slot="home-hero" priority className="rounded-t-full rounded-b-[36px] shadow-[0_50px_90px_-50px_rgba(21,42,22,.7)]" sizes="(min-width: 768px) 34vw, 82vw" />
             </div>
 
-            <div className="relative mt-6 md:mt-8">
-              <SplitReveal
-                as="h1"
-                trigger="stage"
-                data-hero
-                className="serif text-[clamp(3.3rem,8.6vw,9.4rem)] leading-[0.9] tracking-[-0.025em] text-forest"
-              >
-                Organic ceremonial <span data-kw className="italic text-kelly">matcha,</span> handcrafted{" "}
-                <span data-pill className="pill">to order.</span>
-              </SplitReveal>
-              <div className="pointer-events-none absolute -bottom-8 right-0 rotate-[-7deg] md:-bottom-6 md:right-[6%]">
-                <ScriptWrite trigger="stage" delay={1.15} className="text-[clamp(2.2rem,4.4vw,4.2rem)] text-pink">
-                  for the Babes
-                </ScriptWrite>
+            <span data-hero-draw className="absolute -right-[14%] -top-[2%] block w-[20%] rotate-[14deg] text-milk md:-right-[24%]">
+              <HeartDoodle className="w-full" />
+            </span>
+            <span data-hero-draw className="absolute -right-[20%] top-[17%] block w-[11%] -rotate-[10deg] text-milk/90 md:-right-[30%]">
+              <HeartDoodle className="w-full" />
+            </span>
+
+            <div data-pop className="absolute -left-[16%] bottom-[16%] h-28 w-28 text-forest md:-left-[22%] md:h-36 md:w-36">
+              <div className="h-full w-full rounded-full bg-milk p-1.5 shadow-[0_20px_50px_-25px_rgba(21,42,22,.6)]">
+                <SpinBadge text="For the Babes · organic ceremonial · " className="h-full w-full">
+                  <HeartSticker letter="M" className="h-11 w-11 md:h-14 md:w-14" />
+                </SpinBadge>
               </div>
-            </div>
-
-            <p data-fade className="mt-14 max-w-md text-[17px] leading-relaxed text-forest/80 md:mt-16">
-              Whisked fresh at pop-ups across the Rio Grande Valley — and now you can pre-order, skip the line,
-              and book us for your next party without a single back-and-forth DM.
-            </p>
-
-            <div data-fade className="mt-8 flex flex-wrap items-center gap-3">
-              <ButtonLink href="/order" cursor="Order">Pre-order a drink</ButtonLink>
-              <ButtonLink href="/menu" variant="ghost" arrow={false}>See the menu</ButtonLink>
             </div>
 
             <TransitionLink
               href="/order"
               data-fade
-              data-cursor="Order"
-              className="group mt-10 flex max-w-md items-center gap-4 rounded-2xl border border-forest/12 bg-paper/70 p-3 pr-5 backdrop-blur transition-colors hover:border-pink/50"
+              className="group absolute -bottom-6 right-[-4%] flex items-center gap-3 rounded-full bg-milk py-2.5 pl-3 pr-5 text-forest shadow-[0_20px_40px_-20px_rgba(21,42,22,.55)] md:right-[-10%]"
             >
-              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-forest text-center text-cream">
-                <span className="leading-none">
-                  <span className="block font-mono text-[9px] uppercase tracking-[0.2em] text-matcha-soft">{next.day}</span>
-                  <span className="display block text-xl">{next.date.slice(8)}</span>
-                </span>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pink opacity-60 motion-reduce:animate-none" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-pink" />
               </span>
-              <span className="min-w-0 flex-1">
-                <span className="label block !text-[9.5px] text-pink">Next drop</span>
-                <span className="block truncate font-medium">{next.title} · {next.time}</span>
-                <span className="block truncate text-sm text-forest/60">{next.place}</span>
+              <span className="leading-tight">
+                <span className="block text-[12px] text-forest/60">Next pop-up · {nextDate}</span>
+                <span className="block text-[14px] font-semibold">{next.title}, {next.place.split(",").pop()?.trim()}</span>
               </span>
-              <span className="text-xl transition-transform duration-500 group-hover:translate-x-1">→</span>
+              <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
             </TransitionLink>
           </div>
-
-          <div className="relative md:col-span-5">
-            <RevealImage data-hero variant="arch" trigger="stage" delay={0.15} duration={1.8} className="relative mx-auto w-[86%] md:w-full">
-              <BrandImage slot="home-hero" priority className="rounded-t-full rounded-b-[28px]" sizes="(min-width: 768px) 40vw, 86vw" />
-            </RevealImage>
-
-            <div data-pop className="absolute -left-2 bottom-[12%] h-28 w-28 text-forest md:-left-12 md:h-36 md:w-36">
-              <div className="h-full w-full rounded-full bg-cream/90 p-1 shadow-[0_20px_50px_-25px_rgba(5,63,28,.5)] backdrop-blur">
-                <SpinBadge text="Handcrafted to order ✦ Organic ceremonial ✦ " className="h-full w-full">
-                  <Badge className="h-12 w-12 md:h-14 md:w-14" />
-                </SpinBadge>
-              </div>
-            </div>
-            <span data-speed="0.35" className="absolute -right-1 top-[8%] block md:-right-6">
-              <span data-pop className="block"><HeartSticker letter="B" className="h-16 w-16 rotate-12 md:h-20 md:w-20" /></span>
-            </span>
-            <span data-speed="0.6" className="absolute right-[18%] top-[-3%] block">
-              <span data-pop className="block"><HeartSticker letter="M" className="h-12 w-12 -rotate-12 md:h-14 md:w-14" /></span>
-            </span>
-            <span data-speed="0.2" className="absolute -right-2 bottom-[4%] block md:-right-10">
-              <span data-pop className="block"><Mascot className="h-24 w-auto md:h-32" /></span>
-            </span>
-            <span data-speed="0.8" className="absolute left-[8%] top-[18%] block text-pink">
-              <span data-pop className="block"><Sparkle className="h-6 w-6" /></span>
-            </span>
-          </div>
         </div>
-
-        <div data-fade className="mx-auto mt-12 hidden max-w-[1500px] items-center justify-between md:flex">
-          <span className="label text-forest/50">Scroll</span>
-          <span className="relative mx-6 h-px flex-1 overflow-hidden bg-forest/15">
-            <span className="absolute inset-y-0 left-0 w-1/4 animate-[mb-scan_2.4s_var(--ease-babe-io)_infinite] bg-forest motion-reduce:animate-none" />
-          </span>
-          <span className="label text-forest/50">{BRAND.handle}</span>
-        </div>
-        <style>{`@keyframes mb-scan{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}`}</style>
-      </section>
-
-      {/* crossing marquee bands */}
-      <section aria-label="Flavors" className="relative z-10 -my-4 overflow-hidden py-10">
-        <div className="-mx-4 rotate-[2.2deg] bg-pink py-3 text-paper">
-          <Marquee
-            items={["Handcrafted to order", "Organic ceremonial", "Pop-ups & private events", "For the Babes"]}
-            itemClassName="label !text-[12px] !tracking-[0.26em]"
-            separator={<Sparkle className="h-3 w-3 text-blush" />}
-            speed={46}
-          />
-        </div>
-        <div className="-mx-4 -mt-8 rotate-[-2.4deg] bg-forest py-5 text-cream shadow-[0_30px_60px_-30px_rgba(5,63,28,.6)] md:py-7">
-          <Marquee
-            items={FLAVOR_MARQUEE}
-            itemClassName="display text-[clamp(2.2rem,5.4vw,5rem)] leading-none"
-            separator={<HeartSticker letter="B" className="h-[0.9em] w-[0.9em] text-[clamp(2.2rem,5.4vw,5rem)]" />}
-            speed={52}
-          />
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

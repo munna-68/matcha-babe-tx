@@ -16,36 +16,30 @@ export const usePageTransition = () => useContext(TransitionCtx);
 
 const LABELS: Record<string, string> = {
   "/": "Hi, Babe",
-  "/menu": "The Menu",
+  "/menu": "The menu",
   "/order": "Pre-order",
   "/gallery": "Gallery",
   "/dashboard": "Babe HQ",
 };
 
-const Wave = ({ flip = false, className = "" }: { flip?: boolean; className?: string }) => (
-  <svg
-    viewBox="0 0 1440 90"
-    preserveAspectRatio="none"
-    className={`absolute left-0 h-[70px] w-full md:h-[110px] ${flip ? "top-full rotate-180" : "bottom-full"} ${className}`}
-    aria-hidden
-  >
-    <path
-      d="M0 90V52C120 22 250 6 400 18s260 54 420 50 300-56 440-58c80-1 140 12 180 26v62z"
-      fill="currentColor"
-    />
-  </svg>
-);
+const ARCH_IN = "inset(100% 0% 0% 0% round 50% 50% 0% 0%)";
+const COVER = "inset(0% 0% 0% 0% round 0% 0% 0% 0%)";
+const ARCH_OUT = "inset(0% 0% 100% 0% round 0% 0% 50% 50%)";
+
+// A tiny jiggle per letter, same spirit as the wordmark.
+const JIG = [-4, 3, -2, 4, -3, 2, -3, 3, -2, 4];
 
 /**
- * Route transition: a pink "straw stripe" and a matcha-green pour sweep up
- * over the page, the destination name pops in, the route swaps underneath,
- * and the pour keeps rising to reveal the new page (whose entrance animations
- * start as the reveal begins, via the stage gate).
+ * Route transition — "the arch":
+ * a leaf-green panel rises from the bottom with a big rounded top (the
+ * same arch as the hero disc), flattening as it covers the screen. The
+ * destination name pops in letter by letter, the route swaps underneath,
+ * then the panel keeps rising and leaves with a rounded bottom edge,
+ * uncovering the new page (whose entrance starts as the reveal begins).
  */
 export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const pink = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const pendingPath = useRef<string | null>(null);
@@ -54,7 +48,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const [label, setLabel] = useState("");
 
   useEffect(() => {
-    gsap.set([pink.current, panel.current], { yPercent: 100, y: 120 });
+    gsap.set(panel.current, { clipPath: ARCH_IN, visibility: "hidden" });
   }, []);
 
   const reveal = useCallback(() => {
@@ -64,15 +58,16 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     requestAnimationFrame(() => {
       ScrollTrigger.refresh();
       openStage();
+      const chars = labelRef.current?.querySelectorAll("[data-t-char]") ?? [];
       const tl = gsap.timeline({
         onComplete: () => {
           busy.current = false;
-          gsap.set([pink.current, panel.current], { yPercent: 100, y: 120 });
+          gsap.set(panel.current, { clipPath: ARCH_IN, visibility: "hidden" });
         },
       });
-      tl.to(labelRef.current, { yPercent: -60, opacity: 0, duration: 0.45, ease: "power2.in" }, 0)
-        .to(panel.current, { yPercent: -100, y: -140, duration: 1.05, ease: "babeInOut" }, 0.05)
-        .to(pink.current, { yPercent: -100, y: -140, duration: 1.05, ease: "babeInOut" }, 0.14);
+      tl.to(chars, { yPercent: -120, rotate: -6, duration: 0.45, stagger: 0.02, ease: "power3.in" }, 0)
+        .to(panel.current, { clipPath: ARCH_OUT, duration: 0.95, ease: "expo.inOut" }, 0.12)
+        .to(labelRef.current, { yPercent: -30, duration: 0.95, ease: "expo.inOut" }, 0.12);
       getLenis()?.start();
     });
   }, []);
@@ -100,16 +95,22 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       closeStage();
       getLenis()?.stop();
       router.prefetch(href);
-      const tl = gsap.timeline({
-        onComplete: () => {
-          pendingPath.current = path;
-          router.push(href, { scroll: false });
-          fallback.current = setTimeout(reveal, 2500);
-        },
+      // wait one frame so the new label is rendered before we animate it
+      requestAnimationFrame(() => {
+        const chars = labelRef.current?.querySelectorAll("[data-t-char]") ?? [];
+        const tl = gsap.timeline({
+          onComplete: () => {
+            pendingPath.current = path;
+            router.push(href, { scroll: false });
+            fallback.current = setTimeout(reveal, 2500);
+          },
+        });
+        tl.set(panel.current, { visibility: "visible" })
+          .fromTo(panel.current, { clipPath: ARCH_IN }, { clipPath: COVER, duration: 0.8, ease: "expo.inOut" }, 0)
+          .set(labelRef.current, { yPercent: 0 }, 0)
+          .fromTo(chars, { yPercent: 120, rotate: 10 }, { yPercent: 0, rotate: 0, duration: 0.7, stagger: 0.035, ease: "back.out(1.7)" }, 0.42)
+          .to({}, { duration: 0.12 });
       });
-      tl.fromTo(pink.current, { yPercent: 100, y: 120 }, { yPercent: 0, y: 0, duration: 0.85, ease: "babeInOut" }, 0)
-        .fromTo(panel.current, { yPercent: 100, y: 120 }, { yPercent: 0, y: 0, duration: 0.85, ease: "babeInOut" }, 0.1)
-        .fromTo(labelRef.current, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: "babe" }, 0.55);
     },
     [pathname, reveal, router],
   );
@@ -118,17 +119,17 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     <TransitionCtx.Provider value={{ navigate }}>
       {children}
       <div aria-hidden className="pointer-events-none fixed inset-0 z-[110] overflow-hidden">
-        <div ref={pink} className="absolute inset-0 bg-pink text-pink will-change-transform" style={{ transform: "translateY(120%)" }}>
-          <Wave />
-          <Wave flip />
-        </div>
-        <div ref={panel} className="absolute inset-0 bg-forest text-forest will-change-transform" style={{ transform: "translateY(120%)" }}>
-          <Wave />
-          <Wave flip />
-          <div className="absolute inset-0 grid place-items-center">
-            <div ref={labelRef} className="text-center opacity-0">
-              <div className="label mb-4 text-matcha-soft">Whisking</div>
-              <div className="display text-[clamp(3rem,10vw,9rem)] text-cream">{label}</div>
+        <div ref={panel} className="absolute inset-0 bg-leaf text-milk" style={{ clipPath: ARCH_IN, visibility: "hidden" }}>
+          <div className="tiles absolute inset-0 opacity-[0.07]" />
+          <div className="absolute inset-0 grid place-items-center px-6">
+            <div ref={labelRef} className="text-center">
+              <div className="display flex justify-center overflow-hidden whitespace-pre pb-[0.08em] text-[clamp(3.4rem,11vw,10rem)] leading-none [font-variation-settings:'wdth'_100] [font-weight:700]">
+                {label.split("").map((c, i) => (
+                  <span key={`${label}-${i}`} data-t-char className="inline-block">
+                    <span className="inline-block" style={{ transform: `rotate(${JIG[i % JIG.length]}deg)` }}>{c}</span>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

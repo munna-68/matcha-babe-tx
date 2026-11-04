@@ -87,7 +87,7 @@ export function Inbox({
               type="button"
               onClick={() => setFilter(f)}
               aria-pressed={filter === f}
-              className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 font-mono text-[10.5px] uppercase tracking-[0.14em] transition-colors ${filter === f ? "bg-forest text-cream" : "bg-cream text-forest/70 hover:text-forest"}`}
+              className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-[10.5px] font-semibold transition-colors ${filter === f ? "bg-forest text-milk" : "bg-cream text-forest/70 hover:text-forest"}`}
             >
               {f === "all" ? "All" : STATUS_META[f].label}
               <span className={`rounded-full px-1.5 py-px text-[10px] ${filter === f ? "bg-cream/20" : "bg-forest/8"}`}>{counts(f)}</span>
@@ -101,7 +101,7 @@ export function Inbox({
           const isNew = e.id === arrivingId || e.fresh;
           return (
             <li key={e.id} data-row={e.id} className="relative">
-              <div className={`group relative flex items-center gap-3 overflow-hidden rounded-[18px] p-3 transition-colors md:gap-4 md:p-3.5 ${isNew ? "ring-2 ring-pink/60" : "hover:bg-cream"}`}>
+              <div className={`group relative flex items-center gap-3 overflow-hidden rounded-[18px] p-3 transition-colors md:gap-4 md:p-3.5 ${isNew ? "ring-2 ring-leaf/60" : "hover:bg-cream"}`}>
                 <span data-sweep aria-hidden className={`pointer-events-none absolute inset-0 bg-blush ${isNew ? "opacity-[0.18]" : "opacity-0"}`} />
                 <button type="button" onClick={() => onOpen(e)} className="relative flex min-w-0 flex-1 items-center gap-3 text-left md:gap-4" aria-label={`Open ${e.id} from ${e.name}`}>
                   <span className="relative">
@@ -109,7 +109,7 @@ export function Inbox({
                     {isNew && (
                       <span className="absolute left-1/2 top-1/2" aria-hidden>
                         {Array.from({ length: 8 }).map((_, i) => (
-                          <Sparkle key={i} className={`absolute -ml-1.5 -mt-1.5 h-3 w-3 scale-0 ${i % 2 ? "text-pink" : "text-matcha"}`} data-burst />
+                          <Sparkle key={i} className={`absolute -ml-1.5 -mt-1.5 h-3 w-3 scale-0 ${i % 2 ? "text-leaf" : "text-matcha"}`} data-burst />
                         ))}
                       </span>
                     )}
@@ -119,7 +119,7 @@ export function Inbox({
                       <span className="font-medium">{e.name}</span>
                       <span className="font-mono text-[11px] text-forest/45">{e.id}</span>
                       {isNew && (
-                        <span data-justin className="inline-flex items-center gap-1 rounded-full bg-pink px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-paper">
+                        <span data-justin className="inline-flex items-center gap-1 rounded-full bg-leaf px-2 py-0.5 text-[9.5px] font-semibold text-paper">
                           <Sparkle className="h-2 w-2" /> Just in
                         </span>
                       )}
@@ -140,7 +140,7 @@ export function Inbox({
                     <button
                       type="button"
                       onClick={() => onAdvance(e, next.to)}
-                      className="rounded-full bg-forest px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-cream transition-colors hover:bg-pink"
+                      className="rounded-full bg-forest px-3.5 py-2 text-[10px] font-semibold text-milk transition-colors hover:bg-leaf"
                     >
                       {next.label}
                     </button>

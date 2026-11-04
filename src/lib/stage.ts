@@ -50,3 +50,15 @@ export function isStageOpen() {
   init();
   return open;
 }
+
+/**
+ * Set by the preloader when it will fly its wordmark into the hero's
+ * [data-hero-word]. The hero then skips its own word entrance.
+ */
+let introOwnsWord = false;
+export function claimHeroWord() {
+  introOwnsWord = true;
+}
+export function introOwnsHeroWord() {
+  return introOwnsWord;
+}

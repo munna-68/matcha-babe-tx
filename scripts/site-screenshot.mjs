@@ -2,19 +2,20 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 
 async function capture() {
+  const port = 9224;
   const chromeProcess = spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', [
     '--headless=new',
-    '--remote-debugging-port=9223',
+    `--remote-debugging-port=${port}`,
     '--no-first-run',
     '--no-default-browser-check',
-    '--user-data-dir=/tmp/chrome-site-profile',
+    '--user-data-dir=/tmp/chrome-site-profile-2',
     '--window-size=1440,1100'
   ]);
 
-  await new Promise(r => setTimeout(r, 1500));
+  await new Promise(r => setTimeout(r, 2000));
 
   try {
-    const listRes = await fetch('http://127.0.0.1:9223/json/list');
+    const listRes = await fetch(`http://127.0.0.1:${port}/json/list`);
     const list = await listRes.json();
     const pageTarget = list.find(t => t.type === 'page');
     if (!pageTarget) throw new Error('No page target');
@@ -45,7 +46,7 @@ async function capture() {
       source: `sessionStorage.setItem('mb-intro', '1');`
     });
 
-    await send('Page.navigate', { url: 'http://localhost:3002/?labels=1' });
+    await send('Page.navigate', { url: 'http://localhost:3000/?labels=1' });
     await new Promise(r => setTimeout(r, 3500));
 
     // Scroll down to see season-feature and categories
