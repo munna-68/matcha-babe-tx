@@ -49,11 +49,11 @@ async function capture() {
     await send('Page.navigate', { url: 'http://localhost:3000/?labels=1' });
     await new Promise(r => setTimeout(r, 3500));
 
-    // Scroll down to see season-feature and categories
+    // Scroll down to see fall specials
     await send('Runtime.evaluate', {
-      expression: `window.scrollTo(0, 2200);`
+      expression: `window.scrollTo(0, 3200);`
     });
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 1200));
 
     const shot = await send('Page.captureScreenshot', { format: 'png' });
     if (shot && shot.data) {
